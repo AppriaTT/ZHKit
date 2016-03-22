@@ -33,4 +33,13 @@
  *  返回一张纯色的图
  */
 + (UIImage *) colorfulPicture :(UIColor *)color withSize:(CGSize)size;
+
+
+/**
+ *  根据CIImage生成指定大小的UIImage , 让二维码变得清晰
+ *
+ *  @param image CIImage
+ *  @param size  图片宽度
+ */
++ (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image withSize:(CGFloat) size;
 @end
