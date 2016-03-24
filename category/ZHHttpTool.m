@@ -1,80 +1,52 @@
 //
 //  ZHHttpTool.m
-//  LinkHere(R)
+//  微博
 //
-//  Created by Aaron on 3/9/16.
-//  Copyright © 2016 LinkHere. All rights reserved.
+//  Created by Aaron on 15/12/3.
+//  Copyright (c) 2015年 叶无道. All rights reserved.
 //
 
 #import "ZHHttpTool.h"
 
-static AFHTTPSessionManager *_shareManager = nil;
-
 @implementation ZHHttpTool
-
-//懒加载管理者
-+(AFHTTPSessionManager *)shareMangager
++(void)Get:(NSString *)urlString parameters:(NSDictionary *)params acceptableContentTypes:(NSString *)types success:(void(^)(id responseObject))success failure:(void(^)(NSError * error))failure
 {
-    if (!_shareManager) {
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            
-            _shareManager = [AFHTTPSessionManager manager];
-            // 设置网络超时的时间，10秒。
-            _shareManager.requestSerializer.timeoutInterval = 10;
-            // 设置接收的格式
-            _shareManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/xml", @"text/plain", nil];
-        });
-    }
-    return _shareManager;
-}
-
-
-+(void)Get:(NSString *)urlString parameters:(NSDictionary *)params success:(void(^)(id responseObject))success failure:(void(^)(NSError * error))failure
-{
-    AFHTTPSessionManager *session = [self shareMangager];
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    mgr.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:types, nil];
+    [mgr GET:urlString parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        success (responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        failure (error);
+        
+    }];
     
-    if (session.reachabilityManager.reachable) {
-        session.requestSerializer.cachePolicy = NSURLRequestReloadIgnoringCacheData;
-    }
-    else
-    {
-        session.requestSerializer.cachePolicy = NSURLRequestReturnCacheDataElseLoad;
-    }
-    
+//    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+//    session.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:types, nil];
 //    [session GET:urlString parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
 //        success(responseObject);
 //    } failure:^(NSURLSessionDataTask *task, NSError *error) {
 //        failure(error);
 //    }];
-    
-    [session GET:urlString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        success(responseObject);
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        failure(error);
-    }];
 }
 
-+(void)Post:(NSString *)urlString parameters:(NSDictionary *)params success:(void(^)(id responseObject))success failure:(void(^)(NSError * error))failure
++(void)Post:(NSString *)urlString parameters:(NSDictionary *)params acceptableContentTypes:(NSString *)types success:(void(^)(id responseObject))success failure:(void(^)(NSError * error))failure
 {
- 
-    AFHTTPSessionManager *session = [self shareMangager];
-
-//    [session POST:urlString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-//        
-//    } success:^(NSURLSessionDataTask *task, id responseObject) {
+//    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+//    mgr.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:types, nil];
+//    [mgr POST:urlString parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
 //        success (responseObject);
-//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 //        failure (error);
 //    }];
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    session.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:types, nil];
     
-    [session POST:urlString parameters:params progress:^(NSProgress * _Nonnull uploadProgress) {
-  
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        success (responseObject);
+    [session POST:urlString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+    } success:^(NSURLSessionDataTask *task, id responseObject) {
+        success (responseObject);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         failure (error);
     }];
 }
