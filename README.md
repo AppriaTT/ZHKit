@@ -1,6 +1,7 @@
 # ZHKit
-=====
 some small DIY UI from YZH, keep uploading useful features
+上拉缩小头像, 上拉下拉隐藏导航栏
+
 UI
 ====
 
