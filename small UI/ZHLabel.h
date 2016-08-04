@@ -2,10 +2,12 @@
 //  ZHLabel.h
 //
 //  Created by Aaron on 16/7/4.
-//  Copyright © 2016年 muhu. All rights reserved.
+//  Copyright © 2016年 AppariTT. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#define ZHLabelDefaultFont 15
+
 extern NSString *const kZHLabelTextAttributed;
 
 @class ZHLabel;
@@ -19,11 +21,10 @@ typedef NS_ENUM(NSInteger,ZHLabelTextAttributed){
     ZHLabelTextAttributedHighlighted = 1
 };
 
-@interface ZHLabel : UIView
+@interface ZHLabel : UILabel
 /**
  *  添加属性 kZHLabelTextAttributed 为 ZHLabelTextAttributedHighlighted 则为高亮可点击, 并将参数加在属性字典中
  */
-@property (nonatomic,strong)NSAttributedString *attributedText;
 
 @property (nonatomic,assign)id<ZHLabelDelegate>delegate;
 
